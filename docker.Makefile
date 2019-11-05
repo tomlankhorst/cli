@@ -54,8 +54,9 @@ build_binary_native_image:
 build_e2e_image:
 	docker build -t $(E2E_IMAGE_NAME) --build-arg=GO_VERSION --build-arg VERSION=$(VERSION) --build-arg GITCOMMIT=$(GITCOMMIT) -f ./dockerfiles/Dockerfile.e2e .
 
+DOCKER_USERNS_OPTION := --userns=host
 DOCKER_RUN_NAME_OPTION := $(if $(DOCKER_CLI_CONTAINER_NAME),--name $(DOCKER_CLI_CONTAINER_NAME),)
-DOCKER_RUN := docker run --rm $(ENVVARS) $(DOCKER_CLI_MOUNTS) $(DOCKER_RUN_NAME_OPTION)
+DOCKER_RUN := docker run --rm $(ENVVARS) $(DOCKER_CLI_MOUNTS) $(DOCKER_RUN_NAME_OPTION) $(DOCKER_USERNS_OPTION)
 
 binary: build_binary_native_image ## build the CLI
 	$(DOCKER_RUN) $(BINARY_NATIVE_IMAGE_NAME)
